@@ -151,11 +151,9 @@ class GameID:
         print("Downloading: {url}".format(url=file_url))
 
         headers = {"User-Agent": "Mozilla/5.0"}
-        result = download(file_url, headers=headers)
-
-        """ sleep """
 
         sleep(sleep_time)
+        result = download(file_url, headers=headers)
 
         return result
 
@@ -325,10 +323,9 @@ class GameLog:
         header = {"User-Agent": "Mozilla/5.0"}
 
         print("Downloading: {url}".format(url=game_log_url))
-        result = download(game_log_url, headers=header)
 
-        # sleep
         sleep(sleep_time)
+        result = download(game_log_url, headers=header)
 
         return result
 
