@@ -306,13 +306,11 @@ class GameID:
     def extract_game_ids_from_directory(
             self,
             directory_path: str,
-            html_save_directory_path: str,
             auto_clean: bool = True,
     ) -> Dict[str, List[str]]:
         """
         Extract game ids from directory.
         :param directory_path: Directory path to extract game ids.
-        :param html_save_directory_path: Directory to save extracted game ids.
         :param auto_clean: Automatically remove game ids from directory.
         :return: Extracted game ids.
         """
@@ -324,16 +322,16 @@ class GameID:
         for file_name in os.listdir(directory_path):
             self.unzip(
                 os.path.join(directory_path, file_name),
-                os.path.join(html_save_directory_path, file_name.replace(self._zip, "")),
+                os.path.join(self.__save_dir, file_name.replace(self._zip, "")),
             )
 
         # get ids
         all_ids = {
             name:
                 self.extract_game_ids_from_file(
-                    os.path.join(html_save_directory_path, name)
+                    os.path.join(self.__save_dir, name)
                 )
-            for name in os.listdir(html_save_directory_path)
+            for name in os.listdir(self.__save_dir)
             if name[:self._key_len] in self._white_key
         }
 
