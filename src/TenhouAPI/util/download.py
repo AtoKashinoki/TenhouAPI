@@ -6,7 +6,7 @@ This file contains processes that download from "Tenhou" .
 
 
 from typing import (
-    Union, List,
+    Union, List, Tuple, Dict
 )
 int_or_str = Union[int, str]
 
@@ -64,13 +64,21 @@ class GameID:
 
     def gen_file_url(self, file_name: str) -> str: return self._base_url + file_name + self._zip
 
+    _key_len: int = 3
+    @property
+    def key_len(self) -> int: return self._key_len
+
+    _white_key: List[str] = ["scc"]
+    @property
+    def white_key(self) -> List[str]: return self._white_key
+
     _file_name_format: str = "scc{year:04d}{month:02d}{day:02d}{hour:02d}.html"
     @property
     def file_name_format(self) -> str: return self._file_name_format
 
-    _file_name_format_keys: List[str] = ["year", "month", "day", "hour"]
+    _file_name_format_keys: Tuple[str] = ("year", "month", "day", "hour")
     @property
-    def file_name_keys(self) -> List[str]: return self._file_name_format_keys
+    def file_name_keys(self) -> Tuple[str]: return self._file_name_format_keys
 
     @property
     def file_name_length(self) -> int:
@@ -120,7 +128,7 @@ class GameID:
             month: int_or_str,
             day: int_or_str,
             hour: int_or_str,
-            sleep_time: int = 5
+            sleep_time: sleep = 5
     ) -> Union[bytes, None]:
         """
         Download game list from Tenhou.
@@ -159,9 +167,31 @@ class GameID:
 
     """ html build """
 
-    def save_html_file(self, data: bytes, file_name: str) -> str:
+    @staticmethod
+    def unzip(gz_file_path: str, result_path: str):
         """
-        Build and save html file.
+        Unpack zip file and save result.
+        :param gz_file_path: Zip file path to unzip.
+        :param result_path: Unzipped file path.
+        """
+        print(f"Unzipping: {gz_file_path}")
+
+        # check exists
+        if os.path.exists(result_path):
+            print(f"Unzipping is already done: {result_path}")
+            return
+
+        # unpack gz and save html
+        with gzip.open(gz_file_path, "rb") as f_in:
+            with open(result_path, "wb") as f_out:
+                f_out.write(f_in.read())
+                ...
+            ...
+        return
+
+    def save_html_file_from_data(self, data: bytes, file_name: str) -> str:
+        """
+        Build and save html file from data.
         :param data:  Bytes data of gz.
         :param file_name: File name of html file.
         :return: Html file path.
@@ -187,12 +217,7 @@ class GameID:
             f_gz.write(data)
             ...
 
-        # unpack gz and save html
-        with gzip.open(gz_file_path, "rb") as f_in:
-            with open(file_path, "wb") as f_out:
-                f_out.write(f_in.read())
-                ...
-            ...
+        self.unzip(gz_file_path, file_path)
 
         # rm gz
         os.remove(gz_file_path)
@@ -202,17 +227,17 @@ class GameID:
     """ Extract game id from html """
 
     @staticmethod
-    def extract_game_ids(file_name: str) -> List[str]:
+    def extract_game_ids_from_file(file_path: str) -> List[str]:
         """
         Extract game id from html file.
-        :param file_name:  File name of html file.
+        :param file_path:  File name of html file.
         :return: Extracted game id.
         """
 
-        print("Extracting game id from {html} file.".format(html=file_name))
+        print("Extracting game id from {html} file.".format(html=file_path))
 
         # get file contains
-        with open(file_name, "r", encoding="utf-8") as f_html:
+        with open(file_path, "r", encoding="utf-8") as f_html:
             content = f_html.read()
             ...
 
@@ -229,7 +254,7 @@ class GameID:
             month: int_or_str,
             day: int_or_str,
             hour: int_or_str,
-            sleep_time: int = 5
+            sleep_time: float = 5
     ) -> List[str]:
         """
         Run downloading, building html file and extract game id from html file.
@@ -252,12 +277,67 @@ class GameID:
         file_name = self._file_name_format.format(
             year=year, month=month, day=day, hour=hour
         )
-        saved_file_path = self.save_html_file(bytes_data, file_name)
+        saved_file_path = self.save_html_file_from_data(bytes_data, file_name)
 
         # extract ids
-        game_ids = self.extract_game_ids(saved_file_path)
+        game_ids = self.extract_game_ids_from_file(saved_file_path)
 
         return game_ids
+
+    """ Get ids from directory """
+
+    def clean_ids_directory(self, directory_path: str):
+        """
+        Clean directory of ids html.
+        :param directory_path: Directory path to clean.
+        """
+
+        # get file list
+        file_list = os.listdir(directory_path)
+
+        # remove
+        for file_name in file_list:
+            if file_name[:self._key_len] in self._white_key: continue
+            os.remove(os.path.join(directory_path, file_name))
+            continue
+
+        return
+
+    def extract_game_ids_from_directory(
+            self,
+            directory_path: str,
+            html_save_directory_path: str,
+            auto_clean: bool = True,
+    ) -> Dict[str, List[str]]:
+        """
+        Extract game ids from directory.
+        :param directory_path: Directory path to extract game ids.
+        :param html_save_directory_path: Directory to save extracted game ids.
+        :param auto_clean: Automatically remove game ids from directory.
+        :return: Extracted game ids.
+        """
+
+        # clean
+        if auto_clean: self.clean_ids_directory(directory_path)
+
+        # unzip
+        for file_name in os.listdir(directory_path):
+            self.unzip(
+                os.path.join(directory_path, file_name),
+                os.path.join(html_save_directory_path, file_name.replace(self._zip, "")),
+            )
+
+        # get ids
+        all_ids = {
+            name:
+                self.extract_game_ids_from_file(
+                    os.path.join(html_save_directory_path, name)
+                )
+            for name in os.listdir(html_save_directory_path)
+            if name[:self._key_len] in self._white_key
+        }
+
+        return all_ids
 
     ...
 
@@ -308,7 +388,7 @@ class GameLog:
 
     """ Download processes """
 
-    def download_game_log(self, game_id: str, sleep_time: int = 5) -> bytes:
+    def download_game_log(self, game_id: str, sleep_time: float = 5) -> bytes:
         """
         Download game log file.
         :param game_id: Game id to download.
@@ -362,7 +442,7 @@ class GameLog:
 
     """ run all processes """
 
-    def run_all_processes(self, game_id: str, sleep_time: int = 5) -> str:
+    def run_all_processes(self, game_id: str, sleep_time: float = 5) -> str:
         """
         Run downloading and building game log file.
         :param game_id: Game id to download.
