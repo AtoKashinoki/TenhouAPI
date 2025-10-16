@@ -440,15 +440,36 @@ class GameLog:
 
     """ run all processes """
 
-    def run_all_processes(self, game_id: str, sleep_time: float = 5) -> str:
+    def run_all_processes(
+            self,
+            game_id: str,
+            sleep_time: float = 5,
+            skip_exists_log: bool = True,
+    ) -> str:
         """
         Run downloading and building game log file.
         :param game_id: Game id to download.
         :param sleep_time: Sleep time.
+        :param skip_exists_log: Skip existing game log.
         :return: Downloaded file path.
         """
 
         print("Getting game log from {game_id}".format(game_id=game_id))
+
+        # exists
+        if os.path.exists(self.gen_save_file_path(game_id)):
+            # exists file
+            print("game log file already exists: {}".format(game_id))
+
+            # skip
+            if skip_exists_log:
+                return game_id
+
+            # choice
+            if not input("Can I save over it? -> [Y , N]").lower() == "y":
+                return game_id
+
+            ...
 
         # download game log
         game_log = self.download_game_log(game_id, sleep_time)
