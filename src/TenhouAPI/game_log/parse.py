@@ -15,28 +15,16 @@ from typing import (
 
 
 import re
+from ..config.game_log_tag import DisplayGameLogTag
 
 
 """ Parse processes 
 """
 
 
-""" TAG KEY """
-
-INIT = "INIT"
-OPEN_DORA = "OPEN_D"
-P0_DRAW = "P0_DRAW"
-P1_DRAW = "P1_DRAW"
-P2_DRAW = "P2_DRAW"
-P3_DRAW = "P3_DRAW"
-P0_DISCARD = "P0_DISC"
-P1_DISCARD = "P1_DISC"
-P2_DISCARD = "P2_DISC"
-P3_DISCARD = "P3_DISC"
-NAKI = "NAKI"
-REACH = "REACH"
-AGARI = "AGARI"
-RYUUKYOKU = "END"
+GAME_END_KEY: Tuple[str, ...] = (
+    DisplayGameLogTag.AGARI, DisplayGameLogTag.RYUUKYOKU
+)
 
 
 """ Tage management class """
@@ -48,20 +36,20 @@ class TagParser:
     """ Class attributes """
 
     _rename_tag: Dict[str, str] = {
-        "INIT": INIT,
-        "DORA": OPEN_DORA,
-        "T": P0_DRAW,
-        "U": P1_DRAW,
-        "V": P2_DRAW,
-        "W": P3_DRAW,
-        "D": P0_DISCARD,
-        "E": P1_DISCARD,
-        "F": P2_DISCARD,
-        "G": P3_DISCARD,
-        "N": NAKI,
-        "REACH": REACH,
-        "AGARI": AGARI,
-        "RYUUKYOKU": RYUUKYOKU,
+        "INIT": DisplayGameLogTag.INIT,
+        "DORA": DisplayGameLogTag.OPEN_DORA,
+        "T": DisplayGameLogTag.P0_DRAW,
+        "U": DisplayGameLogTag.P1_DRAW,
+        "V": DisplayGameLogTag.P2_DRAW,
+        "W": DisplayGameLogTag.P3_DRAW,
+        "D": DisplayGameLogTag.P0_DISCARD,
+        "E": DisplayGameLogTag.P1_DISCARD,
+        "F": DisplayGameLogTag.P2_DISCARD,
+        "G": DisplayGameLogTag.P3_DISCARD,
+        "N": DisplayGameLogTag.NAKI,
+        "REACH": DisplayGameLogTag.REACH,
+        "AGARI": DisplayGameLogTag.AGARI,
+        "RYUUKYOKU": DisplayGameLogTag.RYUUKYOKU,
     }
 
     """ Initialize """
@@ -252,7 +240,7 @@ class GameLogParser:
         for tag in file_parsed.tags:
             game_log.append(tag)
 
-            if tag not in (AGARI, RYUUKYOKU): continue
+            if tag not in GAME_END_KEY: continue
 
             game_logs.append(tuple(game_log))
             game_log = []
