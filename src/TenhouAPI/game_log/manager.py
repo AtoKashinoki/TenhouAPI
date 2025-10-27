@@ -83,6 +83,12 @@ class GameLogDirectory(DirectoryManager):
         :return: Saved file path.
         """
 
+        """ check file exists """
+
+        if os.path.exists(self.generate_save_file_path(file_name)):
+            print("File {file_name} already exists".format(file_name=file_name))
+            return file_name
+
         """ Download """
 
         bytes_ = download_game_log(
