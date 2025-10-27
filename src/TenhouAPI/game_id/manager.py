@@ -11,8 +11,6 @@ from typing import (
     Tuple
 )
 
-from ..config import GameIdConfig
-
 int_or_str = Union[int, str]
 
 
@@ -20,8 +18,11 @@ int_or_str = Union[int, str]
 
 
 import os.path
+import re
 
 from ..config.tenhou_url import TenhouUrlConfig
+from ..config.game_id import GameIdConfig
+from ..config.manager import WhiteKeyConfig
 
 from ..util.directory_manager import DirectoryManager
 
@@ -129,17 +130,20 @@ class GameIdDirectory(DirectoryManager):
     def save_file_from_zipped_files_dir(
             self,
             zipped_files_dir_path: str,
+            white_key: Tuple[str] = WhiteKeyConfig.player_num_4,
     ) -> Tuple[str, ...]:
         """
         Build and save file from zipped files dir.
         :param zipped_files_dir_path: File name of html file.
+        :param white_key: White key.
         :return: Saved file names.
         """
         return tuple(
             self.save_file_from_zipped_file(
-                os.path.join(zipped_files_dir_path, zipped_file_path)
+                os.path.join(zipped_files_dir_path, zipped_file_name)
             )
-            for zipped_file_path in os.listdir(zipped_files_dir_path)
+            for zipped_file_name in os.listdir(zipped_files_dir_path)
+            if re.match(f"|".join([f"({key})" for key in white_key]), zipped_file_name)
         )
 
     """ Download and install """
@@ -190,7 +194,7 @@ class GameIdDirectory(DirectoryManager):
 
     def extract_game_ids_from_file(
             self, file_name: str,
-            white_key: Tuple[str] = ("00a9", "00e9")
+            white_key: Tuple[str] = WhiteKeyConfig.player_num_4
     ) -> List[str]:
         """
         Extract game id from html file.
