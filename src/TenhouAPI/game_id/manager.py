@@ -143,7 +143,7 @@ class GameIdDirectory(DirectoryManager):
                 os.path.join(zipped_files_dir_path, zipped_file_name)
             )
             for zipped_file_name in os.listdir(zipped_files_dir_path)
-            if re.match(f"|".join([f"({key})" for key in white_key]), zipped_file_name)
+            if re.match(f"|".join([f"(.*{key}.*)" for key in white_key]), zipped_file_name)
         )
 
     """ Download and install """
