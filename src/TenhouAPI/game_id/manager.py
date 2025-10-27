@@ -141,7 +141,7 @@ class GameIdDirectory(DirectoryManager):
                 os.path.join(zipped_files_dir_path, zipped_file_name)
             )
             for zipped_file_name in os.listdir(zipped_files_dir_path)
-            if zipped_file_name[len(self.__url_config.table_key)] == self.__url_config.table_key
+            if zipped_file_name[:len(self.__url_config.table_key)] == self.__url_config.table_key
         )
 
     """ Download and install """
