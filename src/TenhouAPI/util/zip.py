@@ -73,6 +73,17 @@ class ZipBase(ABC):
         """
         return ...
 
+    @staticmethod
+    @abstractmethod
+    def remove_extension(file_path: str, extension: str = EXTENSION) -> str:
+        """
+        Remove zip file extension.
+        :param file_path: File path to remove extension.
+        :param extension: Extension to remove.
+        :return: Removed file path.
+        """
+        return ...
+
     ...
 
 
@@ -90,6 +101,8 @@ class Gzip(ZipBase):
     def add_extension(file_path: str, extension: str = EXTENSION) -> str:
         return file_path + extension
 
-
+    @staticmethod
+    def remove_extension(file_path: str, extension: str = EXTENSION) -> str:
+        return file_path[:-len(extension)]
 
     ...
