@@ -22,6 +22,9 @@ int_or_str = Union[int, str]
 import os.path
 
 from ..config.tenhou_url import TenhouUrlConfig
+
+from ..util.directory_manager import DirectoryManager
+
 from .download import (
     download_game_id_list,
     save_file_from_zipped_bytes,
@@ -33,7 +36,7 @@ from .extract import extract_game_ids_from_file
 """
 
 
-class GameIdDirectory:
+class GameIdDirectory(DirectoryManager):
     """ Manage directory of game ids """
 
     """ Config """
@@ -46,26 +49,6 @@ class GameIdDirectory:
     @property
     def game_id_config(self) -> GameIdConfig: return self.__game_id_config
 
-    """ Save directory processes """
-
-    __save_dir: str
-
-    @property
-    def save_dir(self) -> str:
-        return self.__save_dir
-
-    @save_dir.setter
-    def save_dir(self, save_dir: str) -> None:
-        self.__save_dir = save_dir
-
-    def generate_file_path(self, file_name: str) -> str:
-        """
-        Generate and return  save file path.
-        :param file_name: File name.
-        :return: Generated save file path.
-        """
-        print(self.__save_dir, file_name)
-        return os.path.join(self.__save_dir, file_name)
 
     """ Initialize """
 
@@ -80,7 +63,7 @@ class GameIdDirectory:
         :param save_dir: Directory to save downloaded files.
         :param url_config: URL config.
         """
-        self.__save_dir = save_dir
+        DirectoryManager.__init__(self, save_dir)
         self.__url_config = url_config
         self.__game_id_config = game_id_config
         return
@@ -102,15 +85,15 @@ class GameIdDirectory:
         """ make dist """
 
         # check exists and make dir
-        if not os.path.exists(self.__save_dir):
-            os.makedirs(self.__save_dir)
+        if not os.path.exists(self.save_dir):
+            os.makedirs(self.save_dir)
             ...
 
         """ save file """
 
         save_file_path = save_file_from_zipped_bytes(
             zipped_bytes,
-            self.generate_file_path(file_name),
+            self.generate_save_file_path(file_name),
             self.__url_config
         )
 
@@ -173,7 +156,7 @@ class GameIdDirectory:
         :return: Extracted game id.
         """
         return extract_game_ids_from_file(
-            self.generate_file_path(file_name),
+            self.generate_save_file_path(file_name),
             self.__game_id_config,
             white_key,
         )

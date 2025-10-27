@@ -16,6 +16,9 @@ from typing import (
 import os.path
 
 from ..config.tenhou_url import TenhouUrlConfig
+
+from ..util.directory_manager import DirectoryManager
+
 from .download import download_game_log, save_game_log
 from .parse import GameLogParser
 
@@ -24,27 +27,12 @@ from .parse import GameLogParser
 """
 
 
-class GameLogDirectory:
+class GameLogDirectory(DirectoryManager):
     """ Manage directory of game logs """
 
     """ URL config """
 
     __url_config: Union[type[TenhouUrlConfig], TenhouUrlConfig] = TenhouUrlConfig
-
-    """ Save directory process """
-
-    __save_dir: str
-
-    @property
-    def save_dir(self) -> str: return self.__save_dir
-
-    def generate_save_file_path(self, file_name: str) -> str:
-        """
-        Generate and return save file path.
-        :param file_name: File name to generate.
-        :return: Generated file path.
-        """
-        return os.path.join(self.__save_dir, file_name)
 
     """ Initialize """
 
@@ -58,7 +46,7 @@ class GameLogDirectory:
         :param save_dir: Directory path to save game log files.
         :param url_config: URL config.
         """
-        self.__save_dir = save_dir
+        DirectoryManager.__init__(self, save_dir)
         self.__url_config = url_config
         return
 
@@ -75,8 +63,8 @@ class GameLogDirectory:
         """ Make dist """
 
         # check exists and make dir
-        if not os.path.exists(self.__save_dir):
-            os.makedirs(self.__save_dir)
+        if not os.path.exists(self.save_dir):
+            os.makedirs(self.save_dir)
             ...
 
         """ Save file """
