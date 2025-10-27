@@ -85,6 +85,9 @@ class GameLogDirectory(DirectoryManager):
 
         """ check file exists """
 
+        if file_name is None:
+            file_name = game_id
+
         if os.path.exists(self.generate_save_file_path(file_name)):
             print("File {file_name} already exists".format(file_name=file_name))
             return file_name
@@ -98,9 +101,6 @@ class GameLogDirectory(DirectoryManager):
         )
 
         """ Install """
-
-        if file_name is None:
-            file_name = game_id
 
         saved_file_path = self.save_game_log(
             bytes_, file_name
