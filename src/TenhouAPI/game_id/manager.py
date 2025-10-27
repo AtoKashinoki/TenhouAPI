@@ -96,7 +96,7 @@ class GameIdDirectory(DirectoryManager):
             self,
             zipped_file_path: str,
             save_file_name: str = None,
-    ):
+    ) -> str:
         """
         Build and save file from zipped file.
         :param zipped_file_path: File name of html file.
@@ -124,22 +124,21 @@ class GameIdDirectory(DirectoryManager):
             self.__url_config
         )
 
-        return save_file_path
+        return os.path.basename(save_file_path)
 
     def save_file_from_zipped_files_dir(
             self,
             zipped_files_dir_path: str,
-    ):
+    ) -> Tuple[str, ...]:
         """
         Build and save file from zipped files dir.
         :param zipped_files_dir_path: File name of html file.
-        :return: Saved file name.
+        :return: Saved file names.
         """
-        for file_name in os.listdir(zipped_files_dir_path):
-            zipped_file_path = os.path.join(zipped_files_dir_path, file_name)
+        return tuple(
             self.save_file_from_zipped_file(zipped_file_path)
-            continue
-        return
+            for zipped_file_path in os.listdir(zipped_files_dir_path)
+        )
 
     """ Download and install """
 
