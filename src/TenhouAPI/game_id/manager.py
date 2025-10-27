@@ -82,13 +82,6 @@ class GameIdDirectory(DirectoryManager):
         :return: Saved file name.
         """
 
-        """ make dist """
-
-        # check exists and make dir
-        if not os.path.exists(self.save_dir):
-            os.makedirs(self.save_dir)
-            ...
-
         """ save file """
 
         save_file_path = save_file_from_zipped_bytes(

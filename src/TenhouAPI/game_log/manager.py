@@ -60,13 +60,6 @@ class GameLogDirectory(DirectoryManager):
         :return: Generated file path.
         """
 
-        """ Make dist """
-
-        # check exists and make dir
-        if not os.path.exists(self.save_dir):
-            os.makedirs(self.save_dir)
-            ...
-
         """ Save file """
 
         file_path = save_game_log(
