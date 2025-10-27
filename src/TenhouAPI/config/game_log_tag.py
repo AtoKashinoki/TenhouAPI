@@ -20,6 +20,7 @@ class DisplayGameLogTag(ConfigBase):
     Tag for displaying game log
     """
 
+    GO = "GO"
     INIT = "INIT"
     OPEN_DORA = "OPEN_D"
     P0_DRAW = "P0_DRAW"
