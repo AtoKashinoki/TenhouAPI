@@ -56,6 +56,9 @@ class DirectoryManager(ABC):
         :param save_dir: Directory path to manage.
         """
         self.__save_dir = save_dir
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+            ...
         return
 
     """ Util methods """
