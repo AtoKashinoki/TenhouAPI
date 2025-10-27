@@ -5,8 +5,7 @@
 # typing
 
 
-from typing import List
-
+from typing import List, Tuple
 
 # libs
 
@@ -26,11 +25,13 @@ from ..config.game_id import GameIdConfig
 def extract_game_ids_from_file(
         file_path: str,
         game_id_config: GameIdConfig = GameIdConfig(),
+        white_key: Tuple[str, ...] = ("00a9", "00e9"),
 ) -> List[str]:
     """
     Extract game id from html file.
     :param file_path:  File name of html file.
     :param game_id_config: Config of game id.
+    :param white_key: White key.
     :return: Extracted game id.
     """
 
@@ -43,5 +44,12 @@ def extract_game_ids_from_file(
 
     # extract game ids
     results = re.findall(game_id_config.game_id_format, content)
+
+    # choice white result
+    results = [
+        result
+        for result in results
+        if result[17:21] in white_key
+    ]
 
     return results

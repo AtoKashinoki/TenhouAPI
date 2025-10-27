@@ -8,8 +8,10 @@
 from typing import (
     Union,
     List,
+    Tuple
 )
 
+from ..config import GameIdConfig
 
 int_or_str = Union[int, str]
 
@@ -34,12 +36,15 @@ from .extract import extract_game_ids_from_file
 class GameIdDirectory:
     """ Manage directory of game ids """
 
-    """ URL config """
+    """ Config """
 
     __url_config: Union[type[TenhouUrlConfig], TenhouUrlConfig] = TenhouUrlConfig
+    __game_id_config: Union[type[GameIdConfig], GameIdConfig] = GameIdConfig
 
     @property
     def url_config(self) -> TenhouUrlConfig: return self.__url_config
+    @property
+    def game_id_config(self) -> GameIdConfig: return self.__game_id_config
 
     """ Save directory processes """
 
@@ -68,6 +73,7 @@ class GameIdDirectory:
             self,
             save_dir: str = os.path.join("../util", "dist", "game_ids"),
             url_config: TenhouUrlConfig = __url_config(),
+            game_id_config: GameIdConfig = __game_id_config()
     ) -> None:
         """
         Assign directory that self save downloaded files.
@@ -76,6 +82,7 @@ class GameIdDirectory:
         """
         self.__save_dir = save_dir
         self.__url_config = url_config
+        self.__game_id_config = game_id_config
         return
 
     """ html build """
@@ -155,14 +162,20 @@ class GameIdDirectory:
 
     """ Extract game id from html """
 
-    def extract_game_ids_from_file(self, file_name: str) -> List[str]:
+    def extract_game_ids_from_file(
+            self, file_name: str,
+            white_key: Tuple[str] = ("00a9", "00e9")
+    ) -> List[str]:
         """
         Extract game id from html file.
         :param file_name: File name of html file.
+        :param white_key: White key.
         :return: Extracted game id.
         """
         return extract_game_ids_from_file(
             self.generate_file_path(file_name),
+            self.__game_id_config,
+            white_key,
         )
 
     ...

@@ -36,6 +36,7 @@ class TagParser:
     """ Class attributes """
 
     _rename_tag: Dict[str, str] = {
+        "GO": DisplayGameLogTag.GO,
         "INIT": DisplayGameLogTag.INIT,
         "DORA": DisplayGameLogTag.OPEN_DORA,
         "T": DisplayGameLogTag.P0_DRAW,
@@ -133,6 +134,7 @@ class FileParser:
     def split_key(self) -> str: return self._split_key
 
     _pick_up_tags: Set[str] = (
+        "GO",
         "INIT", "DORA",
         "T", "U", "V", "W",
         "D", "E", "F", "G",
@@ -238,6 +240,11 @@ class GameLogParser:
         game_log = []
 
         for tag in file_parsed.tags:
+
+            if tag == "GO":
+                self.__game_tag = tag
+                continue
+
             game_log.append(tag)
 
             if tag not in GAME_END_KEY: continue
@@ -256,6 +263,10 @@ class GameLogParser:
     __game_log_file_path: str
     @property
     def game_log_file_path(self) -> str: return self.__game_log_file_path
+
+    __game_tag: TagParser
+    @property
+    def game_tag(self) -> TagParser: return self.__game_tag
 
     __game_logs: Tuple[Tuple[TagParser, ...], ...]
     @property
