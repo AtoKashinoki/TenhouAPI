@@ -130,12 +130,10 @@ class GameIdDirectory(DirectoryManager):
     def save_file_from_zipped_files_dir(
             self,
             zipped_files_dir_path: str,
-            white_key: Tuple[str] = WhiteKeyConfig.player_num_4,
     ) -> Tuple[str, ...]:
         """
         Build and save file from zipped files dir.
         :param zipped_files_dir_path: File name of html file.
-        :param white_key: White key.
         :return: Saved file names.
         """
         return tuple(
@@ -143,7 +141,7 @@ class GameIdDirectory(DirectoryManager):
                 os.path.join(zipped_files_dir_path, zipped_file_name)
             )
             for zipped_file_name in os.listdir(zipped_files_dir_path)
-            if re.match(f"|".join([f"(.*{key}.*)" for key in white_key]), zipped_file_name)
+            if zipped_file_name[len(self.__url_config.table_key)] == self.__url_config.table_key
         )
 
     """ Download and install """
