@@ -6,13 +6,17 @@ Utility tools that manage directory.
 # typing
 
 
+from typing import (
+    List
+)
+
+
 # libs
 
 
 from abc import ABC
 
-import os.path
-
+import os
 
 """ Directory manager
 """
@@ -53,5 +57,14 @@ class DirectoryManager(ABC):
         """
         self.__save_dir = save_dir
         return
+
+    """ Util methods """
+
+    def listdir(self) -> List[str]:
+        """
+        List all files in directory.
+        :return: File list.
+        """
+        return os.listdir(self.save_dir)
 
     ...
