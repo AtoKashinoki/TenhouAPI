@@ -5,7 +5,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = 'TenhouAPI'
-version = '0.1.13'
+version = '0.1.14'
 description = 'A library for downloading game logs from the web mahjong game "Tenhou" and extracting data.'
 
 readme = 'README.md'
