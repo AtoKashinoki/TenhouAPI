@@ -112,7 +112,7 @@ class GameIdDirectory(DirectoryManager):
 
         # read zipped file
 
-        with open(zipped_file_path, "wb") as f_zipped:
+        with open(zipped_file_path, "rb") as f_zipped:
             zipped_bytes = f_zipped.read()
             ...
 
