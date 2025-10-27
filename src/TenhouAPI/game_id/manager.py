@@ -137,7 +137,7 @@ class GameIdDirectory(DirectoryManager):
         """
         return tuple(
             self.save_file_from_zipped_file(
-                os.path.join(zipped_file_path, zipped_files_dir_path)
+                os.path.join(zipped_files_dir_path, zipped_file_path)
             )
             for zipped_file_path in os.listdir(zipped_files_dir_path)
         )
