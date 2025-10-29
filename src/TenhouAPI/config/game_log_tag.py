@@ -36,4 +36,7 @@ class DisplayGameLogTag(ConfigBase):
     AGARI = "AGARI"
     RYUUKYOKU = "END"
 
+    DRAW = (P0_DRAW, P1_DRAW, P2_DRAW, P3_DRAW)
+    DISCARD = (P0_DISCARD, P1_DISCARD, P2_DISCARD, P3_DISCARD)
+
     ...
