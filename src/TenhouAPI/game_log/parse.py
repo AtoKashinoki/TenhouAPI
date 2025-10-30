@@ -15,8 +15,7 @@ from typing import (
 
 
 import re
-from ..config.game_log_tag import DisplayGameLogTag, DisplayCalls
-
+from ..config.game_log_tag import DisplayGameLogTag, DisplayCalls, CallTarget
 
 """ Parse processes 
 """
@@ -310,7 +309,6 @@ def parse_m_attribute_of_chi(chi_m: int,) -> RESULT_FORMAT:
     result = PARSE_M_RESULT.copy()
 
     # generate result values
-    from_who = chi_m & 0x3
     t = chi_m >> 10
     base_tile_id = t // 3
     tiles = tuple(base_tile_id+i for i in range(3))
@@ -319,7 +317,7 @@ def parse_m_attribute_of_chi(chi_m: int,) -> RESULT_FORMAT:
     # assign result
     result["m"] = chi_m
     result["type"] = DisplayCalls.CHI
-    result["from"] = from_who
+    result["from"] = CallTarget.LEFT
     result["details"]["tiles"] = tiles
     result["details"]["called_idx"] = called_idx
 
@@ -362,7 +360,6 @@ def parse_m_attribute_of_kakan(kakan_m: int)  -> RESULT_FORMAT:
     result = PARSE_M_RESULT.copy()
 
     # generate result values
-    from_who = None
     t = kakan_m >> 9
     base_tile_id = t // 3
     tiles = tuple(base_tile_id for _ in range(4))
@@ -370,7 +367,7 @@ def parse_m_attribute_of_kakan(kakan_m: int)  -> RESULT_FORMAT:
     # assign result
     result["m"] = kakan_m
     result["type"] = DisplayCalls.KAKAN
-    result["from"] = from_who
+    result["from"] = None
     result["details"]["tiles"] = tiles
     result["details"]["called_idx"] = None
 
