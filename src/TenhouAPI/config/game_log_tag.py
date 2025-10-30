@@ -70,4 +70,9 @@ class CallTarget(ConfigBase):
     RIGHT = 1
     LEFT = 2
 
+    CONVERT_ABS = dict(zip(
+        (i for i in range(3)),
+        (RIGHT, FRONT, LEFT),
+    ))
+
     ...
