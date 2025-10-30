@@ -291,7 +291,7 @@ class GameLogParser:
 
 
 RESULT_FORMAT =\
-    Dict[str, Union[str, int, Dict[str, Union[int, Tuple[int, ...]], None], None]]
+    Dict[str, Union[str, int, Dict[str, Union[int, Tuple[int, ...], None]], None]]
 PARSE_M_RESULT: RESULT_FORMAT= {
     "m": None,
     "type": None,
