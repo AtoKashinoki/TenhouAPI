@@ -15,6 +15,9 @@ from ..util.config import ConfigBase
 """
 
 
+""" Tag """
+
+
 class DisplayGameLogTag(ConfigBase):
     """
     Tag for displaying game log
@@ -42,6 +45,9 @@ class DisplayGameLogTag(ConfigBase):
     ...
 
 
+""" Call """
+
+
 class DisplayCalls(ConfigBase):
     """
     Configs for displaying calls
@@ -51,5 +57,17 @@ class DisplayCalls(ConfigBase):
     PON = "pon"
     KAKAN = "kakan"
     DAIMINKAN = "daiminkan"
+
+    ...
+
+
+class CallTarget(ConfigBase):
+    """
+    Configs for calling target
+    """
+
+    FRONT = 0
+    RIGHT = 1
+    LEFT = 2
 
     ...

@@ -318,7 +318,7 @@ def parse_m_attribute_of_chi(chi_m: int,) -> RESULT_FORMAT:
 
     # assign result
     result["m"] = chi_m
-    result["type"] = "chi"
+    result["type"] = DisplayCalls.CHI
     result["from"] = from_who
     result["details"]["tiles"] = tiles
     result["details"]["called_idx"] = called_idx
@@ -344,7 +344,7 @@ def parse_m_attribute_of_pon(pon_m: int) -> RESULT_FORMAT:
 
     # assign result
     result["m"] = pon_m
-    result["type"] = DisplayCalls.CHI
+    result["type"] = DisplayCalls.PON
     result["from"] = from_who
     result["details"]["tiles"] = tiles
     result["details"]["called_idx"] = called_idx
@@ -368,7 +368,7 @@ def parse_m_attribute_of_kakan(kakan_m: int)  -> RESULT_FORMAT:
     tiles = tuple(base_tile_id for _ in range(4))
 
     # assign result
-    result["m"] = DisplayCalls.PON
+    result["m"] = kakan_m
     result["type"] = DisplayCalls.KAKAN
     result["from"] = from_who
     result["details"]["tiles"] = tiles
@@ -394,7 +394,7 @@ def parse_m_attribute_of_daiminkan(daiminkan_m: int) -> RESULT_FORMAT:
     called_idx = t % 4
 
     # assign result
-    result["m"] = DisplayCalls.PON
+    result["m"] = daiminkan_m
     result["type"] = DisplayCalls.DAIMINKAN
     result["from"] = from_who
     result["details"]["tiles"] = tiles
