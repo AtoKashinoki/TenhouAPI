@@ -40,3 +40,16 @@ class DisplayGameLogTag(ConfigBase):
     DISCARDS = (P0_DISCARD, P1_DISCARD, P2_DISCARD, P3_DISCARD)
 
     ...
+
+
+class DisplayCalls(ConfigBase):
+    """
+    Configs for displaying calls
+    """
+
+    CHI = "chi"
+    PON = "pon"
+    KAKAN = "kakan"
+    DAIMINKAN = "daiminkan"
+
+    ...

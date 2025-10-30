@@ -7,7 +7,7 @@ This file contains processes that parse game log.
 
 
 from typing import (
-    Set, Tuple, List, Dict, Iterator
+    Set, Tuple, List, Dict, Iterator, Union
 )
 
 
@@ -15,7 +15,7 @@ from typing import (
 
 
 import re
-from ..config.game_log_tag import DisplayGameLogTag
+from ..config.game_log_tag import DisplayGameLogTag, DisplayCalls
 
 
 """ Parse processes 
@@ -285,3 +285,132 @@ class GameLogParser:
     def __iter__(self) -> Iterator[Tuple[TagParser, ...]]: return iter(self.__game_logs)
 
     ...
+
+
+""" Attribute parser """
+
+
+RESULT_FORMAT =\
+    Dict[str, Union[str, int, Dict[str, Union[int, Tuple[int, ...]], None], None]]
+PARSE_M_RESULT: RESULT_FORMAT= {
+    "m": None,
+    "type": None,
+    "from": None,
+    "details": {"tiles": None, "called_idx": None}
+}
+
+
+def parse_m_attribute_of_chi(chi_m: int,) -> RESULT_FORMAT:
+    """
+    Parse game log attribute of chi.
+    :param chi_m: Game log attribute.
+    :return: Parsed game log attribute.
+    """
+    # copy result format
+    result = PARSE_M_RESULT.copy()
+
+    # generate result values
+    from_who = chi_m & 0x3
+    t = chi_m >> 10
+    base_tile_id = t // 3
+    tiles = tuple(base_tile_id+i for i in range(3))
+    called_idx = t % 3
+
+    # assign result
+    result["m"] = chi_m
+    result["type"] = "chi"
+    result["from"] = from_who
+    result["details"]["tiles"] = tiles
+    result["details"]["called_idx"] = called_idx
+    
+    return result
+
+
+def parse_m_attribute_of_pon(pon_m: int) -> RESULT_FORMAT:
+    """
+    Parse game log attribute of pon.
+    :param pon_m: Game log attribute.
+    :return: Parsed game log attribute.
+    """
+    # copy result format
+    result = PARSE_M_RESULT.copy()
+
+    # generate result values
+    from_who = pon_m & 0x3
+    t = pon_m >> 9
+    base_tile_id = t // 3
+    tiles = tuple(base_tile_id for _ in range(3))
+    called_idx = t % 3
+
+    # assign result
+    result["m"] = pon_m
+    result["type"] = DisplayCalls.CHI
+    result["from"] = from_who
+    result["details"]["tiles"] = tiles
+    result["details"]["called_idx"] = called_idx
+
+    return result
+
+
+def parse_m_attribute_of_kakan(kakan_m: int)  -> RESULT_FORMAT:
+    """
+    Parse game log attribute of kakan.
+    :param kakan_m: Game log attribute.
+    :return: Parsed game log attribute.
+    """
+    # copy result format
+    result = PARSE_M_RESULT.copy()
+
+    # generate result values
+    from_who = None
+    t = kakan_m >> 9
+    base_tile_id = t // 3
+    tiles = tuple(base_tile_id for _ in range(4))
+
+    # assign result
+    result["m"] = DisplayCalls.PON
+    result["type"] = DisplayCalls.KAKAN
+    result["from"] = from_who
+    result["details"]["tiles"] = tiles
+    result["details"]["called_idx"] = None
+
+    return result
+
+
+def parse_m_attribute_of_daiminkan(daiminkan_m: int) -> RESULT_FORMAT:
+    """
+    Parse game log attribute of daiminkan.
+    :param daiminkan_m: Game log attribute.
+    :return: Parsed game log attribute.
+    """
+    # copy result format
+    result = PARSE_M_RESULT.copy()
+
+    # generate result values
+    from_who = daiminkan_m & 0x3
+    t = daiminkan_m >> 8
+    base_tile_id = t // 4
+    tiles = tuple(base_tile_id for _ in range(4))
+    called_idx = t % 4
+
+    # assign result
+    result["m"] = DisplayCalls.PON
+    result["type"] = DisplayCalls.DAIMINKAN
+    result["from"] = from_who
+    result["details"]["tiles"] = tiles
+    result["details"]["called_idx"] = called_idx
+
+    return result
+
+
+def parse_m_attribute(m: int) -> RESULT_FORMAT:
+    """
+    Parse game log attribute.
+    :param m: Game log attribute.
+    :return: Parsed game log attribute.
+    """
+    if m&0x0004: result = parse_m_attribute_of_chi(m)
+    elif m&0x0008: result = parse_m_attribute_of_pon(m)
+    elif m&0x0010: result = parse_m_attribute_of_kakan(m)
+    else: result = parse_m_attribute_of_daiminkan(m)
+    return result
