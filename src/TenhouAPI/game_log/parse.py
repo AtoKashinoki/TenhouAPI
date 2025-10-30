@@ -322,7 +322,7 @@ def parse_m_attribute_of_chi(chi_m: int,) -> RESULT_FORMAT:
     result["from"] = from_who
     result["details"]["tiles"] = tiles
     result["details"]["called_idx"] = called_idx
-    
+
     return result
 
 
