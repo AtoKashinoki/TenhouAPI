@@ -374,7 +374,7 @@ def parse_m_attribute_of_kakan(kakan_m: int)  -> RESULT_FORMAT:
     return result
 
 
-def parse_m_attribute_of_daiminkan(daiminkan_m: int) -> RESULT_FORMAT:
+def parse_m_attribute_of_kan(daiminkan_m: int) -> RESULT_FORMAT:
     """
     Parse game log attribute of daiminkan.
     :param daiminkan_m: Game log attribute.
@@ -392,7 +392,7 @@ def parse_m_attribute_of_daiminkan(daiminkan_m: int) -> RESULT_FORMAT:
 
     # assign result
     result["m"] = daiminkan_m
-    result["type"] = DisplayCalls.DAIMINKAN
+    result["type"] = DisplayCalls.KAN
     result["from"] = from_who
     result["details"]["tiles"] = tiles
     result["details"]["called_idx"] = called_idx
@@ -409,5 +409,5 @@ def parse_m_attribute(m: int) -> RESULT_FORMAT:
     if m&0x0004: result = parse_m_attribute_of_chi(m)
     elif m&0x0008: result = parse_m_attribute_of_pon(m)
     elif m&0x0010: result = parse_m_attribute_of_kakan(m)
-    else: result = parse_m_attribute_of_daiminkan(m)
+    else: result = parse_m_attribute_of_kan(m)
     return result

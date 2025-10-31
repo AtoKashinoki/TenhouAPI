@@ -56,7 +56,7 @@ class DisplayCalls(ConfigBase):
     CHI = "chi"
     PON = "pon"
     KAKAN = "kakan"
-    DAIMINKAN = "daiminkan"
+    KAN = "kan"
 
     ...
 
