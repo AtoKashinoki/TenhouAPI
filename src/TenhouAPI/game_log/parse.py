@@ -310,7 +310,8 @@ def parse_m_attribute_of_chi(chi_m: int,) -> RESULT_FORMAT:
 
     # generate result values
     t = chi_m >> 10
-    base_tile_id = t // 3
+    base = t // 3
+    base_tile_id = (base // 7) * 9 + (base % 7)
     tiles = tuple(base_tile_id+i for i in range(3))
     called_idx = t % 3
 
