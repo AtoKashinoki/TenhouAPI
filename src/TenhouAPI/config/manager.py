@@ -21,7 +21,7 @@ class WhiteKeyConfig(ConfigBase):
     White keys of directory manager.
     """
 
-    player_num_4 = ("00a9", "00e9")
-    player_num_3 = ("00b9", )
+    player_num_4 = ("00a1", "00a9", )
+    player_num_3 = ("00b1", "00b9", )
 
     ...
