@@ -53,7 +53,11 @@ def download_game_id_list(
     """ generate file name"""
 
     file_name = url_config.id_file_name_format.format(
-        key=url_config.table_key, year=year, month=month, day=day, hour=hour
+        key=url_config.table_key,
+        **dict(zip(
+            ["year", "month", "day", "hour"],
+            map(int, [year, month, day, hour])
+        ))
     )
 
     # check length

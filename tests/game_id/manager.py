@@ -14,7 +14,7 @@ if __name__ == "__main__":
     game_id_directory = GameIdDirectory(DIST)
 
     game_id_directory.download_and_install(
-        2025, 10, 4, 0,
+        "2025", 10, 4, 0,
         sleep_time=0.5
     )
 
